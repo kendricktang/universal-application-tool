@@ -213,7 +213,7 @@ public class VersionRepository {
         block.toBuilder().setProgramQuestionDefinitions(ImmutableList.of());
     for (ProgramQuestionDefinition question : block.programQuestionDefinitions()) {
       Optional<Question> updatedQuestion = getLatestVersionOfQuestion(question.id());
-      LOG.trace(
+      LOG.error(
           "Updating question ID {} to new ID {}.", question.id(), updatedQuestion.orElseThrow().id);
       updatedBlock.addQuestion(
           ProgramQuestionDefinition.create(updatedQuestion.orElseThrow().getQuestionDefinition()));
@@ -224,7 +224,11 @@ public class VersionRepository {
   public void updateProgramsForNewDraftQuestion(long oldId) {
     getDraftVersion().getPrograms().stream()
         .filter(program -> program.getProgramDefinition().hasQuestion(oldId))
-        .forEach(program -> updateQuestionVersions(program));
+        .forEach(
+            program -> {
+              LOG.error("Update the draft program: " + program);
+              updateQuestionVersions(program);
+            });
 
     getActiveVersion().getPrograms().stream()
         .filter(program -> program.getProgramDefinition().hasQuestion(oldId))
@@ -233,7 +237,34 @@ public class VersionRepository {
                 getDraftVersion()
                     .getProgramByName(program.getProgramDefinition().adminName())
                     .isEmpty())
-        .forEach(program -> programRepository.createOrUpdateDraft(program));
+        .forEach(
+            program -> {
+              LOG.error("Update the draft for active program: " + program);
+              programRepository.createOrUpdateDraft(program);
+            });
+  }
+
+  public void updateProgramsForNewDraftQuestions(ImmutableList<Long> oldQuestionIds) {
+    getDraftVersion().getPrograms().stream()
+        .filter(program -> program.getProgramDefinition().hasQuestions(oldQuestionIds))
+        .forEach(
+            program -> {
+              LOG.error("Update the draft program: " + program);
+              updateQuestionVersions(program);
+            });
+
+    getActiveVersion().getPrograms().stream()
+        .filter(program -> program.getProgramDefinition().hasQuestions(oldQuestionIds))
+        .filter(
+            program ->
+                getDraftVersion()
+                    .getProgramByName(program.getProgramDefinition().adminName())
+                    .isEmpty())
+        .forEach(
+            program -> {
+              LOG.error("Update the draft for active program: " + program);
+              programRepository.createOrUpdateDraft(program);
+            });
   }
 
   public List<Version> listAllVersions() {

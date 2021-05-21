@@ -166,6 +166,19 @@ public abstract class ProgramDefinition {
     return questionIds.get().contains(questionId);
   }
 
+  public boolean hasQuestions(ImmutableList<Long> qIds) {
+    if (questionIds.isEmpty()) {
+      questionIds =
+          Optional.of(
+              blockDefinitions().stream()
+                  .map(BlockDefinition::programQuestionDefinitions)
+                  .flatMap(ImmutableList::stream)
+                  .map(ProgramQuestionDefinition::id)
+                  .collect(ImmutableSet.toImmutableSet()));
+    }
+    return questionIds.get().stream().anyMatch(qIds::contains);
+  }
+
   /** Returns true if this program has an enumerator block with the id. */
   public boolean hasEnumerator(long enumeratorId) {
     return blockDefinitions().stream()
