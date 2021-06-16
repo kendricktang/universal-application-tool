@@ -122,7 +122,8 @@ public final class ApplicantInformationController extends CiviFormController {
         .thenApplyAsync(
             applicant -> {
               Locale preferredLocale = applicant.getApplicantData().preferredLocale();
-              return redirect(redirectLink).withLang(preferredLocale, messagesApi);
+              return redirect(redirectLink).withLang(preferredLocale, messagesApi)
+                  .addingToSession(request, "kendrick", applicant.getApplicantData().preferredLocale().toString());
             },
             httpExecutionContext.current())
         .exceptionally(

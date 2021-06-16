@@ -7,6 +7,7 @@ import static j2html.TagCreator.form;
 import static j2html.TagCreator.h2;
 import static j2html.TagCreator.input;
 import static j2html.TagCreator.nav;
+import static j2html.TagCreator.p;
 import static j2html.TagCreator.text;
 
 import auth.ProfileUtils;
@@ -96,6 +97,7 @@ public class ApplicantLayout extends BaseHtmlLayout {
 
   private ContainerTag renderNavBar(Http.Request request, String userName, Messages messages) {
     Optional<UatProfile> profile = profileUtils.currentUserProfile(request);
+    Optional<String> language = request.session().get("kendrick");
 
     return nav()
         .withClasses(
@@ -105,6 +107,7 @@ public class ApplicantLayout extends BaseHtmlLayout {
             Styles.P_4,
             Styles.GRID,
             Styles.GRID_COLS_3)
+        .with(language.isPresent() ? p("KENDRICK: " + language.get()) : div())
         .with(branding())
         .with(maybeRenderTiButton(profile, userName))
         .with(
