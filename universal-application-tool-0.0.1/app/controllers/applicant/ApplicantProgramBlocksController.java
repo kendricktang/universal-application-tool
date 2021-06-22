@@ -287,16 +287,15 @@ public final class ApplicantProgramBlocksController extends CiviFormController {
             },
             httpExecutionContext.current())
         .thenComposeAsync(
-            (roApplicantProgramService) -> {
-              return update(
-                  request,
-                  applicantId,
-                  programId,
-                  blockId,
-                  applicantStage.toCompletableFuture().join(),
-                  inReview,
-                  roApplicantProgramService);
-            },
+            roApplicantProgramService ->
+                update(
+                    request,
+                    applicantId,
+                    programId,
+                    blockId,
+                    applicantStage.toCompletableFuture().join(),
+                    inReview,
+                    roApplicantProgramService),
             httpExecutionContext.current())
         .exceptionally(ex -> handleUpdateExceptions(ex));
   }
