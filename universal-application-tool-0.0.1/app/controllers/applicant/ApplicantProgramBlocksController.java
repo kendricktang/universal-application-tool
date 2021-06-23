@@ -316,7 +316,8 @@ public final class ApplicantProgramBlocksController extends CiviFormController {
     Messages applicantMessages = messagesApi.preferred(request);
 
     // Validation errors: re-render this block with errors and previously entered data.
-    if (thisBlockUpdated.hasErrors()) {
+    if (thisBlockUpdated.hasErrors()
+        || thisBlockUpdated.hasRequiredQuestionsThatAreUnansweredInCurrentProgram()) {
       return supplyAsync(
           () ->
               ok(
