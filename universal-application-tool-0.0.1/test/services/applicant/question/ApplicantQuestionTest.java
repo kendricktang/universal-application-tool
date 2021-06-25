@@ -356,6 +356,7 @@ public class ApplicantQuestionTest {
     assertThat(applicantQuestion.isRequiredButWasUnansweredInCurrentProgram()).isFalse();
   }
 
+  @Test
   public void isAnsweredOrLeftUnansweredInProgram_forOptionalUnanswered_isTrue() {
     ApplicantData applicantData = new ApplicantData();
     long programId = 5L;
@@ -368,12 +369,14 @@ public class ApplicantQuestionTest {
     QuestionAnswerer.addMetadata(applicantData, questionPath, programId, 0L);
     ProgramQuestionDefinition pqd =
         ProgramQuestionDefinition.create(
-            testQuestionBank.applicantJugglingNumber().getQuestionDefinition(), true);
+                testQuestionBank.applicantJugglingNumber().getQuestionDefinition(),
+                Optional.of(programId))
+            .setOptional(true);
 
     ApplicantQuestion applicantQuestion =
         new ApplicantQuestion(pqd, applicantData, Optional.empty());
 
-    assertThat(applicantQuestion.isAnsweredOrLeftUnansweredInProgram(programId)).isTrue();
+    assertThat(applicantQuestion.isAnsweredOrLeftUnansweredInProgram()).isTrue();
   }
 
   @Test
@@ -390,12 +393,14 @@ public class ApplicantQuestionTest {
     QuestionAnswerer.addMetadata(applicantData, questionPath, programId + 1, 0L);
     ProgramQuestionDefinition pqd =
         ProgramQuestionDefinition.create(
-            testQuestionBank.applicantJugglingNumber().getQuestionDefinition(), true);
+                testQuestionBank.applicantJugglingNumber().getQuestionDefinition(),
+                Optional.of(programId))
+            .setOptional(true);
 
     ApplicantQuestion applicantQuestion =
         new ApplicantQuestion(pqd, applicantData, Optional.empty());
 
-    assertThat(applicantQuestion.isAnsweredOrLeftUnansweredInProgram(programId)).isFalse();
+    assertThat(applicantQuestion.isAnsweredOrLeftUnansweredInProgram()).isFalse();
   }
 
   @Test
@@ -411,11 +416,12 @@ public class ApplicantQuestionTest {
     QuestionAnswerer.addMetadata(applicantData, questionPath, programId, 0L);
     ProgramQuestionDefinition pqd =
         ProgramQuestionDefinition.create(
-            testQuestionBank.applicantJugglingNumber().getQuestionDefinition(), false);
+            testQuestionBank.applicantJugglingNumber().getQuestionDefinition(),
+            Optional.of(programId));
 
     ApplicantQuestion applicantQuestion =
         new ApplicantQuestion(pqd, applicantData, Optional.empty());
 
-    assertThat(applicantQuestion.isAnsweredOrLeftUnansweredInProgram(programId)).isFalse();
+    assertThat(applicantQuestion.isAnsweredOrLeftUnansweredInProgram()).isFalse();
   }
 }

@@ -226,7 +226,8 @@ public class ProgramBuilder {
     public BlockBuilder withQuestionDefinition(QuestionDefinition question, boolean optional) {
       blockDefBuilder.addQuestion(
           ProgramQuestionDefinition.create(
-              question, Optional.of(programBuilder.programDefinitionId)).setOptional(optional));
+                  question, Optional.of(programBuilder.programDefinitionId))
+              .setOptional(optional));
       return this;
     }
 

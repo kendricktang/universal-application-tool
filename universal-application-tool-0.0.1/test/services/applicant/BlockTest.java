@@ -449,7 +449,7 @@ public class BlockTest {
 
     Block block = new Block("id", blockDefinition, applicantData, Optional.empty());
 
-    assertThat(block.isCompleteInProgramWithoutErrors(programId)).isTrue();
+    assertThat(block.isCompleteInProgramWithoutErrors()).isTrue();
   }
 
   @Test
@@ -534,7 +534,7 @@ public class BlockTest {
 
     Block block = new Block("id", blockDefinition, applicantData, Optional.empty());
 
-    assertThat(block.isCompleteInProgramWithoutErrors(programId)).isFalse();
+    assertThat(block.isCompleteInProgramWithoutErrors()).isFalse();
   }
 
   @Test
@@ -562,7 +562,7 @@ public class BlockTest {
 
     Block block = new Block("id", blockDefinition, applicantData, Optional.empty());
 
-    assertThat(block.isCompleteInProgramWithoutErrors(programId)).isFalse();
+    assertThat(block.isCompleteInProgramWithoutErrors()).isFalse();
   }
 
   private static BlockDefinition setUpBlockWithQuestions() {

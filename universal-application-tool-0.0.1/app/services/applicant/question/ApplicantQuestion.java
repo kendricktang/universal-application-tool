@@ -77,6 +77,29 @@ public class ApplicantQuestion {
   }
 
   /**
+   * Return true if this question is answered, or left unanswered in the program specified.
+   * Questions can only be left unanswered if they are optional.
+   *
+   * <p>For every applicant question, there are three possible states:
+   *
+   * <ol>
+   *   <li>unvisited - the applicant has not seen this question yet
+   *   <li>unanswered - the applicant has visited the question but chose to leave it unanswered.
+   *       Only optional questions can be left unanswered
+   *   <li>answered - the applicant has visited and provided an answer to the question
+   * </ol>
+   *
+   * For unanswered optional questions, we care in which program it was left unanswered. For the
+   * program which the optional question was left unanswered, it counts as "completed" for that
+   * program.
+   *
+   * @return true if this question is answered, or left unanswered in the program specified.
+   */
+  public boolean isAnsweredOrLeftUnansweredInProgram() {
+    return errorsPresenter().isAnswered() || (isOptional() && wasRecentlyUpdatedInThisProgram());
+  }
+
+  /**
    * Return true if this question is required but was left unanswered while filling out the current
    * program.
    */
@@ -150,35 +173,6 @@ public class ApplicantQuestion {
 
   public boolean hasErrors() {
     return errorsPresenter().hasQuestionErrors() || errorsPresenter().hasTypeSpecificErrors();
-  }
-
-  /**
-   * Return true if this question is answered, or left unanswered in the program specified.
-   * Questions can only be left unanswered if they are optional.
-   *
-   * <p>For every applicant question, there are three possible states:
-   *
-   * <ol>
-   *   <li>unvisited - the applicant has not seen this question yet
-   *   <li>unanswered - the applicant has visited the question but chose to leave it unanswered.
-   *       Only optional questions can be left unanswered
-   *   <li>answered - the applicant has visited and provided an answer to the question
-   * </ol>
-   *
-   * For unanswered optional questions, we care in which program it was left unanswered. For the
-   * program which the optional question was left unanswered, it counts as "completed" for that
-   * program.
-   *
-   * @return true if this question is answered, or left unanswered in the program specified.
-   */
-  public boolean isAnsweredOrLeftUnansweredInProgram(long programId) {
-    return errorsPresenter().isAnswered() || (isOptional() && wasVisitedInProgram(programId));
-  }
-
-  /** Returns true if this question was visited by the specified program. */
-  private boolean wasVisitedInProgram(long programId) {
-    // Use anyMatch, not allMatch, because anyMatch will be false for empty streams.
-    return getUpdatedInProgramMetadata().stream().anyMatch(pid -> pid.equals(programId));
   }
 
   public Optional<Long> getUpdatedInProgramMetadata() {

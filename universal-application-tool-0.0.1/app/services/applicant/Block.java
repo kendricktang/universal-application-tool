@@ -190,13 +190,13 @@ public final class Block {
    * A block is complete with respect to a specific program if all of its questions are answered, or
    * are optional and left unanswered in the program.
    */
-  public boolean isCompleteInProgramWithoutErrors(long programId) {
-    return isCompleteInProgram(programId) && !hasErrors();
+  public boolean isCompleteInProgramWithoutErrors() {
+    return isCompleteInProgram() && !hasErrors();
   }
 
-  private boolean isCompleteInProgram(long programId) {
+  private boolean isCompleteInProgram() {
     return getQuestions().stream()
-        .anyMatch(question -> question.isAnsweredOrLeftUnansweredInProgram(programId));
+        .anyMatch(question -> question.isAnsweredOrLeftUnansweredInProgram());
   }
 
   /**
